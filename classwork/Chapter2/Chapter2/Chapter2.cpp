@@ -48,5 +48,36 @@ int main()
     std::cout << "Hello World! " << name; 
     // before you can use a variable you must declare it and define it! (std::string name; name = _____) -- CODE RUNS TOP DOWN SILLY
 
+
+    //var-declaration ::= T id;
+    //type = define what can be stored in the variable and in what format
+    int age;
+    age = 21;
+    std::cout <<
+    // 
+     // std:: string circleName;
+     
+     // now i can use the variables
+
+     // inline - variables are declared just before they are used
+     int radius, diameter;
+    // use radius, diameter 
+
+    std::string circleName;
+    // use circleName
+
+    double pi;
+    pi = 3.14159; 
+
+    char lettergrade;
+    lettergrade = 'A'; // single quotes for char literals
+
+    bool ispassing;
+    ispassing = true; // false 
+
+    // assignment is right associative (evaliate right to left) 
+    //length = 100;
+    //width = 100; 
+    length = width = 100;
+
 }
-// putting my name in these for funnsies ^-^
