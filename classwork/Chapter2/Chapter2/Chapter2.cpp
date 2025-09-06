@@ -53,8 +53,28 @@ int main()
     //type = define what can be stored in the variable and in what format
     int age;
     age = 21;
-    std::cout <<
-    // 
+    std::cout << "you are " << age << " years old";
+
+    // area of retangle calculator!! 
+    // A = L * W
+    std::string firstname;
+    // int length;
+    // int width;
+    // length = 10;
+    // width = 20;
+    int length = 10, width = 20;
+
+    // uninitialized variable - YOU MUST assign a value to a variable before you read it
+    // int area;
+    // area = 0;
+    int area = 0;
+    //area = length * width;
+    
+    std::cout << "area of rectangle is " << area << std::endl;
+
+    // 2 different approaches to declaring variables
+    // block - all variables together
+    // int radius, diameter;
      // std:: string circleName;
      
      // now i can use the variables
