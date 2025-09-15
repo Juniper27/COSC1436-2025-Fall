@@ -44,12 +44,22 @@ int main ()
     std::string exam3;
     std::getline(std::cin, exam3);
 
-    std::cout << " \n" 
+    std::cout << " \n";
     std::cout << name << ", Your Lab Scores are: " << std::endl;
     std::cout << "Lab 1: " << lab1 << std::endl;
     std::cout << "Lab 2: " << lab2 << std::endl;
     std::cout << "Lab 3: " << lab3 << std::endl;
-    std::cout << "Lab 4: " << lab4 << std::endl;    
+    std::cout << "Lab 4: " << lab4 << std::endl;
+
+    int average;
+    average = (lab1 + lab2 + lab3 + lab4) / 4;
+    std::cout << "Your Average Lab Score is: " << average << std::endl;
+
+    std::cout << " \n";
+    std::cout << name << ", Your Exam Scores are: " << std::endl;
+    std::cout << "Exam 1: " << exam1 << std::endl;
+    std::cout << "Exam 2: " << exam2 << std::endl; 
+    std::cout << "Exam 3: " << exam3 << std::endl; 
 
 
 }
