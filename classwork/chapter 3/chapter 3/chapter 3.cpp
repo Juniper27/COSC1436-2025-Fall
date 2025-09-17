@@ -25,7 +25,7 @@ void main()
 
     std::cout << std::setw(9) << std::left << "round " << std::setw(7) << x << std::setw(7) << y << std::setw(12) << round(x) << std::endl;
     std::cout << std::setw(9) << std::left << "trunc " << std::setw(7)<<  x << std::setw(7) << y << std::setw(12) << trunc(x) << std::endl;
-    // makes a pretty table yippe!! 
+    // makes a pretty table yippe!!!
 }
 void ExpressionDemo()
 {
