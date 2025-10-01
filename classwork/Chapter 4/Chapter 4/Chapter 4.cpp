@@ -3,9 +3,62 @@
 
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 int main()
 {
+    // Demo prefix/postfix-increment/decrement
+    std::cout << "Enter a valuse: ";
+    int number;
+    std::cin >> number;
+
+    /*
+    std::cout << "Prefix (++x) = " << ++number << ", X =" << number << std::endl;
+    std::cout << "Prefix (--x) = " << --number << ", X =" << number << std::endl;
+    std::cout << "Postfix (x++) = " << number++ << ", X =" << number << std::endl;
+    std::cout << "Prefix (x--) = " << number-- << ", X =" << number << std::endl; */
+
+    //Display main menu
+    bool done = false;
+    while (!done)
+    {
+        std::cout << "Movie Library" << std::endl;
+        std::cout << "--------------" << std::endl;
+        std::cout << "A)dd Movie" << std::endl;
+        std::cout << "V)iew Movies" << std::endl;
+        std::cout << "E)dit Movie" << std::endl;
+        std::cout << "D)elete Movie" << std::endl;
+        std::cout << "Q)uit" << std::endl;
+
+        char choice;
+        std::cin >> choice;
+
+
+        switch (choice)
+    {
+        case 'A': //std::cout << "Add not implemented" << std::endl; break;
+        case 'a': std::cout << "Add not implemented" << std::endl; done = true; break;
+
+        case 'V':
+        case 'v': //can be written like this
+        {
+            //declaring a variable 
+            // switch-statement
+            std::cout << "View not implemented" << std::endl; done = true;
+            break;
+        }
+        case 'D': std::cout << "Delete not implemented" << std::endl; done = true; break;
+        case 'd': std::cout << "Delete not implemented" << std::endl; done = true; break;
+
+        case 'E': std::cout << "Edit not implemented" << std::endl; done = true; break;
+        case 'e': std::cout << "Edit not implemented" << std::endl; done = true; break;
+
+        case 'Q': return 0;
+        case 'q': return 0;
+
+        default: std::cout << "Invalid choice" << std::endl; break;
+    };
+
     // movie details
     std::string title;                 // Required      
     std::string description;           // Optional
@@ -24,12 +77,22 @@ int main()
         std::cout << "Title is required" << std::endl;
 
     std::cout << "Enter the run length (in mins): ";
-    std::cin >> runLength;
-    if (runLength < 0)
+   /* runLength = -1;
+    while (runLength < 0)
     {
-        std::cout << "Run length must be at least 0" << std::endl;
-        runLength = 0;
-    };
+        std::cin >> runLength;
+        if (runLength < 0)
+            std::cout << "ERROR: Run length must be at least 0" << std::endl;
+    };*/
+    std::cin >> runLength;
+    while (runLength < 0)
+    {
+        //ERROR
+        std::string message = "Run length must be at least 0";
+        std::cout << "ERROR: " << message << std::endl;
+
+        std::cin >> runLength;
+    }
 
     std::cout << "Enter the release year (1900-2100): ";
     std::cin >> releaseYear;
@@ -79,7 +142,7 @@ int main()
    // else
    //     std::cout << "You must enter Y or N";
 
-
+    isClassic = false;
     if (_strcmpi(input.c_str(), "Y") == 0)
         isClassic = true;
     else
@@ -87,9 +150,24 @@ int main()
             isClassic = false;
         else
              std::cout << "You must enter Y or N";
-    //TODO: HANDLE OTHER VALUES
 
+     // View movie
+    //    Title (Year)
+    //    Run Length # min
+    //    User Rating = ##
+    //    Is Classic? 
+    //    [Description]
+    std::cout << std::fixed << std::setprecision(1) << std::endl;
+    std::cout << title << " (" << releaseYear << ")" << std::endl;
+    std::cout << "Run Length " << runLength << " mins" << std::endl;
+    std::cout << "User Rating = " << userRating << std::endl;
+
+    std::cout << "Is Classic? " << (isClassic ? "Yes" : "No") << std::endl;
+    if (description != "")
+        std::cout << description << std::endl;
+    std::cout << std::endl;
 }
+
 
 void relationalDemo()
 {
@@ -116,8 +194,8 @@ void relationalDemo()
     std::cout << "< " << (left < right) << std::endl;
     std::cout << ">= " << (left >= right) << std::endl;
     std::cout << "<= " << (left <= right) << std::endl;
-    std::cout << "== " << (left > right) << std::endl;
-    std::cout << "!= " << (left < right) << std::endl;
+    std::cout << "== " << (left == right) << std::endl;
+    std::cout << "!= " << (left != right) << std::endl;
 
     // if a line isnt working put perithesis around the expression
     // 1 = true 0 = false
