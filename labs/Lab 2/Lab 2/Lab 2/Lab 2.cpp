@@ -58,5 +58,7 @@ int main()
     std::cout << std::setw(9) << std::left << "Month " << std::setw(15) << "Loan Balance " << std::setw(9) << "Intrest " << std::setw(15) << "New Balance " << std::endl;
     std::cout << std::setw(50) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
 
+    std::cout << std::setw(9) << std::left << 0 << std::setw(15) << initialLoan << std::setw(9) << 0.00 << std::setw(15) << initialLoan << std::endl;
+
 
 }
