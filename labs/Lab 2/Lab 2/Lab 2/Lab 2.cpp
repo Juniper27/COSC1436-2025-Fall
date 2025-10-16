@@ -1,6 +1,6 @@
 // June Barkley
 // Lab 2
-// COSC 1430 Fall 2025
+// COSC 1436 Fall 2025
 
 #include <iostream>
 #include <string>
@@ -60,13 +60,21 @@ int main()
             std::string message = "Monthly payment must be between $1 and Initial Loan Amount.";
             std::cout << "ERROR! " << message << std::endl;
         }
-    } while (monthlyPayment < 1 || monthlyPayment > initialLoan);
+    } while (monthlyPayment < 0.0 || monthlyPayment > initialLoan);
 
     std::cout << "\n";
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "First 12 Months of Loan" << std::endl;
     std::cout << std::setw(70) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
-    std::cout << std::right << std::setw(8) << "Month " << std::setw(12) << "Balance " << std::setw(12) << "Payment " << std::setw(12) << "Intrest " << std::setw(14) << "New Balance " << std::endl;
+
+    std::cout << std::right
+        << std::setw(8) << "Month "
+        << std::setw(10) << "Balance "
+        << std::setw(10) << "Payment "
+        << std::setw(10) << "Intrest "
+        << std::setw(14) << "New Balance "
+        << std::endl;
+
     std::cout << std::setw(70) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
 
     double balance = initialLoan;
@@ -80,40 +88,48 @@ int main()
         double oldBalance = balance;
 
         if (month == 1)
-        { 
+        {
             payment = 0.0;
             interest = 0.0;
-            balance = oldBalance;
-        }
-        else if (balance > 0)
+
+        } else if (oldBalance > 0.0)
         {
-            if (balance < monthlyPayment)
+            if (oldBalance < monthlyPayment)
             {
-                payment = balance;
-            }
-            else
+                payment = oldBalance;
+            } else
             {
                 payment = monthlyPayment;
             }
-
             balance -= payment;
-            if (balance > 0)
+            if (balance > 0.0)
             {
                 interest = balance * (interestRate / 100.0);
+            } else
+            {
+                interest = 0.0;
             }
-            balance = balance + interest;
-            paymentTotal = paymentTotal + payment;
-            interestTotal = interestTotal + interest;
+            balance += interest;
+            paymentTotal += payment;
+            interestTotal += interest;
         }
+        // this is so confusing 2 read but it works? maybe try something else later
 
-        std::cout << std::right 
-            << std::setw(8) << month 
-            << std::setw(12) << "$" << oldBalance 
-            << std::setw(12) << "$" << payment 
-            << std::setw(12) << "$" << interest 
+        std::cout << std::right
+            << std::setw(4) << month
+            << std::setw(4) << "$" << std::setw(6) << oldBalance
+            << std::setw(4) << "$" << std::setw(6) << payment
+            << std::setw(4) << "$" << std::setw(6) << interest
+            << std::setw(4) << "$" << std::setw(8) << balance << std::endl;
+       /* not lining up correctly :c
+       std::cout << std::right
+            << std::setw(8) << month
+            << std::setw(12) << "$" << oldBalance
+            << std::setw(12) << "$" << payment
+            << std::setw(12) << "$" << interest
             << std::setw(14) << "$" << balance << std::endl;
-        //std::cout << month << std::setw(8) << "$" << oldBalance << std::setw(8) << "$" << payment << std::setw(8) << "$" << interest << std::setw(8) << "$" << balance << std::endl;
-        //::cout << std::right << std::setw(5) << month << std::setw(8) << "$" << initialLoan << std::setw(8) << "$" << 0.00 << std::setw(8) << "$" << 0.00 << std::setw(8) << "$" << initialLoan << std::endl;
+        //std::cout << month << std::setw(8) << "$" << oldBalance << std::setw(8) << "$" << payment << std::setw(8) << "$" << interest << std::setw(8) << "$" << balance << std::endl; (2nd tought OLD)
+        //::cout << std::right << std::setw(5) << month << std::setw(8) << "$" << initialLoan << std::setw(8) << "$" << 0.00 << std::setw(8) << "$" << 0.00 << std::setw(8) << "$" << initialLoan << std::endl; (1st thought OLD) */
     }
 
     std::cout << "Total Payments: $" << paymentTotal << "    Total Interest: $" << interestTotal;
