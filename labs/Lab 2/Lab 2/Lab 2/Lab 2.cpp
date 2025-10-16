@@ -37,7 +37,7 @@ int main()
         }
 
     } while (initialLoan < 1 || initialLoan > 1000); */
-    float interestRate;
+    double interestRate;
     do
     {
         std::cout << "Enter intrest rate % (Must be between 1.0 and 100.0): ";
