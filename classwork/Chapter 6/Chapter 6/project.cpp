@@ -87,6 +87,20 @@ void DisplayWarning(std::string message)
     ResetTextColor();
 }
 
+int ReadInt(int minimumValue, int maximumValue)
+{
+    do
+    {
+        int value;
+        std::cin >> value;
+
+        if (value >= minimumValue && value <= maximumValue)
+            return value;
+
+        DisplayError("Value too small");
+    } while (true);
+}
+
 std::string ReadString(std::string message, bool isRequired)
 {
     std::cout << message;
@@ -108,6 +122,11 @@ std::string ReadString(std::string message, bool isRequired)
 /// </remarks>
 void ViewMovie(Movie movie)
 {
+    if(movie.title == "")
+    {
+        DisplayWarning("No movies exist");
+        return;
+    }
     // View movie
     //    Title (Year)
     //    Run Length # min
@@ -183,10 +202,11 @@ void DeleteMovie(Movie movie)
         return;
 
     // TODO: Delete movie
-    DisplayWarning("Delete not implemented");
+    //DisplayWarning("Delete not implemented");
+    movie.title = "";
 }
 
-void EditMovie(Movie movie)
+void EditMovie(Movie& movie)
 {
     DisplayWarning("Edit not implemented");
 }
