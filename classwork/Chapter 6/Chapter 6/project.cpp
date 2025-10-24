@@ -211,6 +211,36 @@ void EditMovie(Movie& movie)
     DisplayWarning("Edit not implemented");
 }
 
+// test overload functions 
+void Display (int value)
+{
+    std::cout << "int" << std::endl;
+}
+
+void Display (double value)
+{
+    std::cout << "double" << std::endl;
+}
+
+void Display (float value)
+{
+    std::cout << "float" << std::endl;
+}
+
+void Display (int value, double value2)
+{
+    std::cout << "int, double" << std::endl;
+}
+
+void TestFunctionOverloading()
+{
+    Display(10);          // int
+    Display(4.56);        // double
+    Display((short)34);  // int --> short is promoted to int
+    Display(10, 4.56F);  // int, double
+
+}
+
 int main()
 {
     //Display main menu
