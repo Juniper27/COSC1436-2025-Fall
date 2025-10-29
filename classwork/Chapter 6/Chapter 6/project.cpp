@@ -17,6 +17,9 @@ struct Movie
     std::string genres;         //Optional (comma separated list of genres)
 };
 
+int g_thisIsAGlobalVariable = 100; // <- this is an example of a global variable (don't do this!)
+// any int declared outside of a function is a global variable
+
 enum class ForegroundColor {
     Black = 30,
     Red = 31,
@@ -29,6 +32,10 @@ enum class ForegroundColor {
     BrightCyan = 96
 };
 
+// Function prototypes
+// Forward declarations/referencing ---- try to avoid using this and just rearrange code order
+void DisplayError(std::string);
+
 void ResetTextColor()
 {
     std::cout << "\033[0m";
@@ -37,6 +44,28 @@ void ResetTextColor()
 void SetTextColor(ForegroundColor color)
 {
     std::cout << "\033[" << (int)color << "m"; // must type cast to get this to work
+}
+
+/// <summary> Display a confirmation message
+/// <param name="message">Message to show</param>
+/// <returns>returns true or false depending on user input</returns>
+bool Confirm (std::string message)
+{
+std::cout << message << " (Y / N) ";
+std::string input;
+std::cin >> input;
+
+while (true)
+{
+    if (_strcmpi(input.c_str(), "Y") == 0)
+        return true;
+    else if (_strcmpi(input.c_str(), "N") == 0)
+        return false;
+    else {
+        DisplayError("You Must enter either Y or N");
+        std::cin >> input;
+        }
+    }
 }
 
 /// <summary> Displays ab error message to the user </summary>
@@ -57,12 +86,47 @@ void DisplayWarning(std::string message)
     std::cout << message << std::endl;
     ResetTextColor();
 }
+
+int ReadInt(int minimumValue, int maximumValue)
+{
+    do
+    {
+        int value;
+        std::cin >> value;
+
+        if (value >= minimumValue && value <= maximumValue)
+            return value;
+
+        DisplayError("Value too small");
+    } while (true);
+}
+
+std::string ReadString(std::string message, bool isRequired)
+{
+    std::cout << message;
+
+    std::string imput;
+    std::getline(std::cin, imput);
+
+    while (isRequired && imput == "")
+    {
+        DisplayError("Value is Required");
+        std::getline(std::cin, imput);
+    }
+    return imput;
+}
+
 /// <summary>View details of a movie.</summary>
 /// <remarks>
 /// More details including paragraphs of data if you want.
 /// </remarks>
 void ViewMovie(Movie movie)
 {
+    if(movie.title == "")
+    {
+        DisplayWarning("No movies exist");
+        return;
+    }
     // View movie
     //    Title (Year)
     //    Run Length # min
@@ -80,7 +144,7 @@ void ViewMovie(Movie movie)
 }
 
 /// <summary>Prompt user and add movie details.</summary>
-void AddMovie()
+Movie AddMovie()
 {
     Movie movie;// = {0};
 
@@ -90,12 +154,8 @@ void AddMovie()
     std::getline(std::cin, movie.title);
 
     //Title is required
-    while (movie.title == "")
-    {
-        DisplayError("Title is Required"); // use this instead of cout for error messages
-        std::getline(std::cin, movie.title);
-    }
-
+    movie.title = ReadString("Enter movie title: ", true);
+   
     std::cout << "Enter the run length (in minutes): ";
     do
     {
@@ -117,17 +177,12 @@ void AddMovie()
         std::cin >> movie.releaseYear;
     }
 
-    std::cout << "Enter the optional description: ";
-    std::cin.ignore();
-    std::getline(std::cin, movie.description);
+    movie.description = ReadString("Enter the optional description: ", false);
 
     // Genres, up to 5
     for (int index = 0; index < 5; ++index)
     {
-        std::string genre;
-
-        std::cout << "Enter the genre (or blank to continue): ";
-        std::getline(std::cin, genre);
+        std::string genre = ReadString("Enter genre (or blank to continue): ", false);
         if (genre == "")
             break;
         else if (genre == " ")
@@ -136,25 +191,54 @@ void AddMovie()
         movie.genres = movie.genres + ", " + genre;
     }
 
-    std::cout << "Is this a classic (Y/N)? ";
-    std::string input;
-    std::cin >> input;
+    movie.isClassic = Confirm("Is this a classic?");
+   
+    return movie;
+}
 
-    while (true)
-    {
-        if (_strcmpi(input.c_str(), "Y") == 0)
-        {
-            movie.isClassic = true;
-            break;
-        } else if (_strcmpi(input.c_str(), "N") == 0)
-        {
-            movie.isClassic = false;
-            break;
-        } else {
-            DisplayError("You Must enter either Y or N");
-            std::cin >> input;
-        }
-    }
+void DeleteMovie(Movie movie)
+{
+    if (Confirm("Are you sure you want to delete this movie?" + movie.title + "?"))
+        return;
+
+    // TODO: Delete movie
+    //DisplayWarning("Delete not implemented");
+    movie.title = "";
+}
+
+void EditMovie(Movie& movie)
+{
+    DisplayWarning("Edit not implemented");
+}
+
+// test overload functions 
+void Display (int value)
+{
+    std::cout << "int" << std::endl;
+}
+
+void Display (double value)
+{
+    std::cout << "double" << std::endl;
+}
+
+void Display (float value)
+{
+    std::cout << "float" << std::endl;
+}
+
+void Display (int value, double value2)
+{
+    std::cout << "int, double" << std::endl;
+}
+
+void TestFunctionOverloading()
+{
+    Display(10);          // int
+    Display(4.56);        // double
+    Display((short)34);  // int --> short is promoted to int
+    Display(10, 4.56F);  // int, double
+
 }
 
 int main()
@@ -179,16 +263,16 @@ int main()
         switch (choice)
         {
             case 'A':
-            case 'a': AddMovie(); break;
+            case 'a': movie = AddMovie(); break;
 
             case 'V':
             case 'v': ViewMovie(movie); break;
 
             case 'D':
-            case 'd': DisplayWarning("Delete not implemented"); break;
+            case 'd': DeleteMovie(movie); break;
 
             case 'E':
-            case 'e': DisplayWarning("Edit not implemented"); break;
+            case 'e': EditMovie(movie); break;
 
             case 'Q':
             case 'q': done = true;
@@ -203,3 +287,10 @@ int main()
 }
 
 //EVERY FUNCTION MUST HAVE COMMENTS OR I  WILL LOSE POINTS 
+
+//NEVER USE GLOBAL SCOPE 
+    // they are unacceptable in professional code
+    // they are unreliable
+    // they make code harder to read and maintain
+    // functions are no longer isolated units 
+    // chance at memory corruption increases
