@@ -53,7 +53,7 @@ void fallingDistance(int time, double &distance)
     distance = 0.5 * g * time * time;
     //std::cout << std::fixed << std::setprecision(2);
     //std::cout << "Falling Distance = " << distance << " meters in "  
-        //<< time << " seconds." << std::endl;                              MOVE TO MAIN LATER?
+        //<< time << " seconds." << std::endl;                        was originally going to redisplay info to user
 }
 
 /// <summary> converts the distance from meters to feet.</summary>
@@ -131,6 +131,4 @@ int main()
     fallingTime(time);
     pickUnit(unit);
     displayTable(time, unit);
-
-    return 0;
 }
