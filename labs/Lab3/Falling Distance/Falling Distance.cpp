@@ -83,7 +83,7 @@ void fallingVelocity(int time, double &velocity)
 void displayTable(int time, char unit)
 {
     std::cout << "\n";
-    std::cout << std::fixed << std::setprecision(2);
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << std::left
         << std::setw(10) << "Seconds" 
         << std::right
