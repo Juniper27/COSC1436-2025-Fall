@@ -82,15 +82,15 @@ void fallingVelocity(int time, double &velocity)
 /// <param name="unit"> unit choice for display</param>
 void displayTable(int time, char unit)
 {
-    std::cout << "\nFalling Distance Table\n";
-    std::cout << "===========================================\n";
+    std::cout << "\n";
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << std::right
-        << std::setw(10) << "Seconds"
+    std::cout << std::left
+        << std::setw(10) << "Seconds" 
+        << std::right
         << std::setw(12) << "Distance"
         << std::setw(12) << "Velocity"
         << std::endl;
-    std::cout << "===========================================\n";
+    std::cout << std::setw(50) << std::setfill('-') << "" << std::setfill(' ') << std::endl;
 
     for (int i = 1; i <= time; i++)
     {
@@ -102,8 +102,8 @@ void displayTable(int time, char unit)
         if (unit == 'f' || unit == 'F')
             changeUnit(distance);
        
-        std::cout << std::right << std::setw(10) << i 
-            << std::setw(10) << distance;
+        std::cout << std::left << std::setw(10) << i;
+        std::cout << std::right << std::setw(10) << distance;
 
         if (unit == 'm' || unit == 'M')
             std::cout << "m";
