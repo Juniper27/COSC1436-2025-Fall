@@ -17,9 +17,10 @@ struct Movie
     std::string genres;         //Optional (comma separated list of genres)
 };
 
-int g_thisIsAGlobalVariable = 100; // <- this is an example of a global variable (don't do this!)
-// any int declared outside of a function is a global variable
+//DO NOT DO THIS!!!
+//int g_thisIsAGlobalVariable = 100;
 
+/// <summary>Defines possible foreground colors.</summary>
 enum class ForegroundColor {
     Black = 30,
     Red = 31,
@@ -32,8 +33,8 @@ enum class ForegroundColor {
     BrightCyan = 96
 };
 
-// Function prototypes
-// Forward declarations/referencing ---- try to avoid using this and just rearrange code order
+//Function prototypes
+//Forward declarations/referencing
 void DisplayError(std::string);
 
 void ResetTextColor()
@@ -43,43 +44,44 @@ void ResetTextColor()
 
 void SetTextColor(ForegroundColor color)
 {
-    std::cout << "\033[" << (int)color << "m"; // must type cast to get this to work
+    std::cout << "\033[" << (int)color << "m";
 }
 
-/// <summary> Display a confirmation message
-/// <param name="message">Message to show</param>
-/// <returns>returns true or false depending on user input</returns>
-bool Confirm (std::string message)
+/// <summary>Display a confirmation message.</summary>
+/// <param name="message">Message to show.</param>
+/// <returns>Returns true or false depending on whether confirmed or not.</returns>
+bool Confirm(std::string message)
 {
-std::cout << message << " (Y / N) ";
-std::string input;
-std::cin >> input;
+    std::cout << message << " (Y/N) ";
+    std::string input;
+    std::cin >> input;
 
-while (true)
-{
-    if (_strcmpi(input.c_str(), "Y") == 0)
-        return true;
-    else if (_strcmpi(input.c_str(), "N") == 0)
-        return false;
-    else {
-        DisplayError("You Must enter either Y or N");
-        std::cin >> input;
+    while (true)
+    {
+        if (_strcmpi(input.c_str(), "Y") == 0)
+            return true;
+        else if (_strcmpi(input.c_str(), "N") == 0)
+            return false;
+        else {
+            DisplayError("You must enter either Y or N");
+
+            std::cin >> input;
         }
     }
 }
 
-/// <summary> Displays ab error message to the user </summary>
+/// <summary>Displays an error message.</summary>
 /// <param name="message">Message to display.</param>
 void DisplayError(std::string message)
 {
-    //std::cout << "\033[91m"
+    //std::cout << "\033[91m" 
     SetTextColor(ForegroundColor::BrightRed);
     std::cout << "ERROR: " << message << std::endl;
-    // << "\033[0m"
-        ResetTextColor();
-       // << std::endl;
+    ResetTextColor();
 }
 
+/// <summary>Displays a warning message.</summary>
+/// <param name="message">Message to display.</param>
 void DisplayWarning(std::string message)
 {
     SetTextColor(ForegroundColor::BrightYellow);
@@ -97,23 +99,30 @@ int ReadInt(int minimumValue, int maximumValue)
         if (value >= minimumValue && value <= maximumValue)
             return value;
 
-        DisplayError("Value too small");
+        DisplayError("Value is outside range");
     } while (true);
+}
+
+int ReadInt(int minimumValue)
+{
+    return ReadInt(minimumValue, INT_MAX);
 }
 
 std::string ReadString(std::string message, bool isRequired)
 {
     std::cout << message;
 
-    std::string imput;
-    std::getline(std::cin, imput);
+    std::string input;
+    std::getline(std::cin, input);
 
-    while (isRequired && imput == "")
+    while (isRequired && input == "")
     {
-        DisplayError("Value is Required");
-        std::getline(std::cin, imput);
+        DisplayError("Value is required");
+
+        std::getline(std::cin, input);
     }
-    return imput;
+
+    return input;
 }
 
 /// <summary>View details of a movie.</summary>
@@ -122,11 +131,12 @@ std::string ReadString(std::string message, bool isRequired)
 /// </remarks>
 void ViewMovie(Movie movie)
 {
-    if(movie.title == "")
+    if (movie.title == "")
     {
         DisplayWarning("No movies exist");
         return;
     }
+
     // View movie
     //    Title (Year)
     //    Run Length # min
@@ -143,46 +153,40 @@ void ViewMovie(Movie movie)
     std::cout << std::endl;
 }
 
+void ViewMovies(Movie movies[], int size)
+{
+    //Enumerate movies until we run out
+    //for (Movie movie: movies)
+    for (int index = 0; index < size; ++index)
+    {
+        if (movies[index].title == "")
+            return;
+
+        ViewMovie(movies[index]);
+    };
+}
+
 /// <summary>Prompt user and add movie details.</summary>
 Movie AddMovie()
 {
     Movie movie;// = {0};
 
     //Get movie details
-    std::cout << "Enter movie title: ";
-    std::cin.ignore();
-    std::getline(std::cin, movie.title);
-
-    //Title is required
     movie.title = ReadString("Enter movie title: ", true);
-   
-    std::cout << "Enter the run length (in minutes): ";
-    do
-    {
-        std::cin >> movie.runLength;
 
-        //Error
-        if (movie.runLength < 0)
-        {
-            DisplayError("Run length must be at least 0");
-        }
-    } while (movie.runLength < 0);
+    std::cout << "Enter the run length (in minutes): ";
+    movie.runLength = ReadInt(0);
 
     std::cout << "Enter the release year (1900-2100): ";
     std::cin >> movie.releaseYear;
-    while (movie.releaseYear < 1900 || movie.releaseYear > 2100)
-    {
-        DisplayError("Release year must be between 1900 and 2100");
-
-        std::cin >> movie.releaseYear;
-    }
+    movie.releaseYear = ReadInt(1900, 2100);
 
     movie.description = ReadString("Enter the optional description: ", false);
 
     // Genres, up to 5
     for (int index = 0; index < 5; ++index)
     {
-        std::string genre = ReadString("Enter genre (or blank to continue): ", false);
+        std::string genre = ReadString("Enter the genre (or blank to continue): ", false);
         if (genre == "")
             break;
         else if (genre == " ")
@@ -191,58 +195,222 @@ Movie AddMovie()
         movie.genres = movie.genres + ", " + genre;
     }
 
-    movie.isClassic = Confirm("Is this a classic?");
-   
+    movie.isClassic = Confirm("Is this a classic movie?");
+
     return movie;
 }
 
-void DeleteMovie(Movie movie)
+void DeleteMovie()
 {
-    if (Confirm("Are you sure you want to delete this movie?" + movie.title + "?"))
+    Movie movie;
+    if (!Confirm("Are you sure you want to delete " + movie.title + "?"))
         return;
 
-    // TODO: Delete movie
-    //DisplayWarning("Delete not implemented");
+    //TODO: Delete movie
+    //DisplayWarning("Not implemented yet");
     movie.title = "";
 }
 
-void EditMovie(Movie& movie)
+void EditMovie()
 {
-    DisplayWarning("Edit not implemented");
+    DisplayWarning("Not implemented yet");
 }
 
-// test overload functions 
-void Display (int value)
+// Arrays as parameters
+//    T id[] - no size, arrays are open
+//    Always include size as next parameter because array sizes cannot be determined at runtime
+//    Arrays are always pass by reference
+//    Arrays cannot be the return type of a function
+int AddToMovieArray(Movie movies[], int size, Movie movie)
+{
+    //Enumerate the array looking for the first blank movie
+    for (int index = 0; index < size; ++index)
+    {
+        if (movies[index].title == "")
+        {
+            //Set the array element
+            movies[index] = movie;
+            return index;
+        }
+    }
+
+    DisplayError("No space available for new movie");
+    return -1;
+}
+
+#pragma region Function Overloading
+
+//Test function overloading
+void Display(int value)
 {
     std::cout << "int" << std::endl;
 }
 
-void Display (double value)
+void Display(double value)
 {
     std::cout << "double" << std::endl;
 }
 
-void Display (float value)
+void Display(float value)
 {
     std::cout << "float" << std::endl;
 }
 
-void Display (int value, double value2)
+void Display(short value1, double value2)
 {
     std::cout << "int, double" << std::endl;
 }
 
-void TestFunctionOverloading()
+void Display(short value, float)
 {
-    Display(10);          // int
-    Display(4.56);        // double
-    Display((short)34);  // int --> short is promoted to int
-    Display(10, 4.56F);  // int, double
-
+    std::cout << "short, float" << std::endl;
 }
 
+void Display(int, short)
+{
+    std::cout << "int, short" << std::endl;
+}
+
+void Display(short, int)
+{
+    std::cout << "int, short" << std::endl;
+}
+
+//void TestFunctionOverloading()
+//{ 
+//    Display(10);   //Display(int)
+//    Display(4.56); // Display(double)
+//    Display((short)34);  // Display(int) -> shortest type coercion
+//    Display(10, 4.56F);  // Display(int, double)
+//
+//    long lValue = 10000L;
+//    Display(lValue, 4.56);
+//
+//    //Display("Hello", 4.56); //Compiler error, no matches
+//    //Display(10, "Hello");   //Compiler error, no matches
+//
+//    Display('c', 4.56F);   // short, float
+//    Display((short)5, (short)10);
+//}
+#pragma endregion
+
+#pragma region Factorial
+
+int Factorial(int value)
+{
+    if (value <= 1)
+        return 1;
+
+    return value * Factorial(value - 1);
+}
+#pragma endregion
+
+#pragma region Array Demo
+
+void ArrayDemo()
+{
+    const int MaxNumbers = 100;
+
+    //Init array using { 0 }
+    int numbers[MaxNumbers] = {0};
+    //int numbers[100];        
+
+    //# of days in each month
+    //int daysInMonth[12] = { 0 };
+    //Approach 1 - correct but not readable
+    /*daysInMonth[0] = daysInMonth[2] = daysInMonth[4] = daysInMonth[6] = daysInMonth[7]
+                   = daysInMonth[9] = daysInMonth[11] = 31;
+    daysInMonth[1] = 28;
+    daysInMonth[3] = daysInMonth[5] = daysInMonth[8] = daysInMonth[10] = 30;*/
+
+    //Approach 2 - init expression
+    // Zero init - each element is set to 0// { 0 }
+    // Full init - each element is assigned a value
+    // Partial init - each element is assigned a value and remaining elements are 0 initialized    
+    //int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    // Implicit array sizing
+    int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    //Set each element to its element number (element 1 = 1, element 2 = 2, etc)
+    //Approach 1 for small arrays only
+    numbers[0] = 1;
+    numbers[1] = 2;
+    numbers[2] = 3;
+
+    //Approach 2 for any array
+    //for (int index = 0; index < MaxNumbers; ++index)
+        //numbers[index] = index + 1;
+    int rangeIndex = 0;
+    for (int& number : numbers)
+        number = ++rangeIndex;
+
+    /*for (int index = 0; index < MaxNumbers; ++index)
+        std::cout << numbers[index] << std::endl;*/
+    //for-range ::= for (T var: array)
+    for (int number: numbers)
+        std::cout << number << std::endl;
+
+    //Prefix/postfix and arrays
+    // ++x := x = x + 1; ret x
+    // x++ := temp = x; x = x + 1; ret temp
+    int outIndex = 0;
+    std::cout << ++numbers[outIndex] << std::endl;//Modifies element, ++numbers[0], numbers[0] = 2, prints 2
+    std::cout << numbers[outIndex]++ << std::endl;//Modifies element, numbers[0]++, numbers[0] = 3, prints 2
+    std::cout << numbers[++outIndex] << std::endl;//Modifies index, numbers[++0], outIndex = 1, 
+                                                  //  numbers[1], prints 2
+    std::cout << numbers[outIndex++] << std::endl;//Modifies index, numbers[1++], outIndex = 2,
+                                                  //  numbers[1], prints 2
+
+    //Arrays
+    // Access elements
+    // CAN'T
+    //int numbers2[MaxNumbers] = numbers;  //Assignment, have to manually copy using a for 
+    int numbers3[MaxNumbers] = {0};
+    bool areArraysEqual = numbers == numbers3; //Comparison doesn't work, (in)equality compiles but doesn't work
+                                               // Have to use a for loop to compare elements
+    std::cout << numbers;     //Output doesn't work, have to use a for loop
+    //std::cin >> numbers;      //Input will not compile
+}
+#pragma endregion
+
+void MultidemensionalArrayDemo()
+{
+    // months are the rows days are the columns
+    int months[12][31];
+
+    for (int row = 0; row < 12;++row)
+        for (int col = 0; col < 31; ++col)
+        {
+            months[row][col] = (row +1) + (col + 1);
+        }
+
+    for (int row = 0; row < 12; ++row)
+    {
+        for (int col = 0; col < 31; ++col)
+        {
+            std::cout << months[row][col] << " ";
+        }
+
+        std::cout << std::endl;
+    }
+}
 int main()
 {
+    //ArrayDemo();
+    //std::cout << Factorial(5) << std::endl;
+
+    //Cannot calculate the size of an array at runtime so use a const int variable
+    const int MaximumMovies = 100;
+
+    //TODO: Leaving this for now to avoid breaking code
+    //Movie movie;
+    Movie movies[MaximumMovies];
+
+    // Array operator []
+    //    A[index] = behaves like a variable
+    Movie firstElement = movies[0];
+
     //Display main menu
     bool done = false;
     do
@@ -258,21 +426,19 @@ int main()
         char choice;
         std::cin >> choice;
 
-        Movie movie;
-
         switch (choice)
         {
             case 'A':
-            case 'a': movie = AddMovie(); break;
+            case 'a': AddToMovieArray(movies, MaximumMovies, AddMovie()); break;
 
             case 'V':
-            case 'v': ViewMovie(movie); break;
+            case 'v': ViewMovies(movies, MaximumMovies); break;
 
             case 'D':
-            case 'd': DeleteMovie(movie); break;
+            case 'd': DeleteMovie(); break;
 
             case 'E':
-            case 'e': EditMovie(movie); break;
+            case 'e': EditMovie(); break;
 
             case 'Q':
             case 'q': done = true;
@@ -283,7 +449,7 @@ int main()
 
     //std::cin.ignore();
     // Function call ::= func () 
-    //ViewMovie();
+    //ViewMovie();    
 }
 
 //EVERY FUNCTION MUST HAVE COMMENTS OR I  WILL LOSE POINTS 
