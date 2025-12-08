@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <fstream> // For file I/O
 
 //Movie details
 struct Movie
@@ -395,6 +396,22 @@ void MultidemensionalArrayDemo()
         std::cout << std::endl;
     }
 }
+// strings must always be pass by reference 
+void SaveMovie(std::fstream& file, Movie* pMovie)
+{
+    file <<pMovie->id
+        // 
+}
+
+void SaveMovies(const char* filename, Movie* movies[], int size)
+{
+   // std::fstream fs;
+   // std::ifstream ifs;
+   // std::ofstream ofs;
+
+    std::ofstream file; 
+}
+
 int main()
 {
     //ArrayDemo();
@@ -402,6 +419,8 @@ int main()
 
     //Cannot calculate the size of an array at runtime so use a const int variable
     const int MaximumMovies = 100;
+
+    LoadMovie(movies, MaximumMovies);
 
     //TODO: Leaving this for now to avoid breaking code
     //Movie movie;
@@ -441,7 +460,7 @@ int main()
             case 'e': EditMovie(); break;
 
             case 'Q':
-            case 'q': done = true;
+            case 'q': SaveMovies(movies, MaximumMovies); done = true; break;
 
             default: DisplayError("Invalid choice"); break;
         };
